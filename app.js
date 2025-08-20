@@ -1,5 +1,8 @@
 
-// Categories now populate immediately from local bank, then refresh with online ones.
+// === Trivia App: Expanded Online Sources (OpenTDB + The Trivia API) ===
+// Drop-in replacement for app.js. Keeps your UI behavior but expands online questions.
+
+/* -------------------- Local bank & utilities -------------------- */
 const DEFAULT_QUESTIONS = [
   { q: "What is the capital of Australia?", a: ["Sydney","Canberra","Melbourne","Perth"], correct: 1, category: "General Knowledge", type: "multiple" },
   { q: "The Great Barrier Reef is off the coast of Queensland.", a: ["True","False"], correct: 0, category: "Geography", type: "truefalse" },
@@ -18,10 +21,10 @@ const $  = (s) => document.querySelector(s);
 const $$ = (s) => Array.from(document.querySelectorAll(s));
 
 const state = { session:[], idx:0, score:0, locked:false, high:Number(localStorage.getItem(KEY.HIGH)||0), onlineCategories:[] };
-const toast = (m)=>{ const t=$("#toast"); if(!t){alert(m);return;} t.textContent=m; t.classList.remove("hidden"); clearTimeout(window.__t); window.__t=setTimeout(()=>t.classList.add("hidden"),1300); };
+const toast = (m)=>{ const t=$("#toast"); if(!t){alert(m);return;} t.textContent=m; t.classList.remove("hidden"); clearTimeout(window.__t); window.__t=setTimeout(()=>t.classList.add("hidden"),1400); };
 const unique = (a)=>[...new Set(a)];
 const shuffle=(a)=>a.sort(()=>Math.random()-0.5);
-const sample=(arr,n)=>shuffle([...arr]).slice(0,n);
+const sample=(arr,n)=>shuffle([...arr]).slice(0,Math.max(0,n));
 const decode=(s)=>{ const el=document.createElement("textarea"); el.innerHTML=s; return el.value; };
 
 const loadBank=()=>{
@@ -31,21 +34,11 @@ const loadBank=()=>{
   return bank;
 };
 
+/* -------------------- Categories -------------------- */
 function renderCategoriesLocal(bank){
   const sel=$("#category"); if(!sel) return;
   const localCats=unique(bank.map(q=>q.category||"Other")).sort();
   sel.innerHTML=['<option value="All">All</option>', ...localCats.map(c=>`<option value="${c}">${c}</option>`)].join("");
-}
-
-function renderCategoriesOnline(){
-  const sel=$("#category"); if(!sel) return;
-  if(!state.onlineCategories.length) return;
-  const prev = sel.value || "All";
-  const onlineOpts = state.onlineCategories.map(c=>`<option value="otdb:${c.id}">🔵 ${c.name}</option>`);
-  // keep existing local options and prepend online
-  const local = Array.from(sel.querySelectorAll("option")).map(o=>o.outerHTML);
-  sel.innerHTML = [local[0], ...onlineOpts, ...local.slice(1)].join("");
-  sel.value = prev;
 }
 
 async function fetchOnlineCategories(){
@@ -53,19 +46,25 @@ async function fetchOnlineCategories(){
     const res=await fetch("https://opentdb.com/api_category.php",{cache:"no-store"});
     const data=await res.json();
     state.onlineCategories=(data.trivia_categories||[]).map(c=>({id:c.id, name:c.name}));
-    renderCategoriesOnline();
+    const sel=$("#category"); if(!sel) return;
+    const prev=sel.value||"All";
+    const onlineOpts=state.onlineCategories.map(c=>`<option value="otdb:${c.id}">🔵 ${c.name}</option>`);
+    const existing=Array.from(sel.querySelectorAll("option")).map(o=>o.outerHTML);
+    sel.innerHTML=[existing[0], ...onlineOpts, ...existing.slice(1)].join("");
+    sel.value=prev;
   }catch(e){ /* ignore */ }
 }
 
-async function fetchFromOpenTDB(amount,mode,catId,difficulty){
+/* -------------------- Online fetchers -------------------- */
+async function fetchFromOpenTDB(amount,mode,otdbCategoryId,difficulty){
   const params=new URLSearchParams({amount:String(amount)});
   if(difficulty) params.set("difficulty", difficulty);
   if(mode==="multiple") params.set("type","multiple");
   else if(mode==="truefalse") params.set("type","boolean");
-  if(catId) params.set("category", String(catId));
+  if(otdbCategoryId) params.set("category", String(otdbCategoryId));
   const res=await fetch(`https://opentdb.com/api.php?${params.toString()}`,{cache:"no-store"});
   const data=await res.json();
-  if(!data.results || !data.results.length) throw new Error("No online results");
+  if(!data.results || !data.results.length) return [];
   return data.results.map(it=>{
     const type = it.type==="boolean"?"truefalse":"multiple";
     const corr = decode(it.correct_answer);
@@ -74,6 +73,52 @@ async function fetchFromOpenTDB(amount,mode,catId,difficulty){
   });
 }
 
+// The Trivia API v2
+async function fetchFromTriviaAPI(amount,mode,difficulty){
+  const params = new URLSearchParams();
+  params.set("limit", String(amount));
+  if(mode==="multiple") params.set("types","multiple-choice");
+  else if(mode==="truefalse") params.set("types","boolean");
+  if(difficulty) params.set("difficulties", difficulty);
+  const url = `https://the-trivia-api.com/v2/questions?${params.toString()}`;
+  const res = await fetch(url,{cache:"no-store"});
+  if(!res.ok) return [];
+  const data = await res.json();
+  if(!Array.isArray(data) || !data.length) return [];
+  return data.map(it=>{
+    const type = (it.type==="boolean" || (it.correctAnswer && (it.incorrectAnswers||[]).length===1)) ? "truefalse" : "multiple";
+    const corr = it.correctAnswer;
+    const incorrect = it.incorrectAnswers || (type==="truefalse" ? [corr==="True"?"False":"True"] : []);
+    const all = shuffle([corr, ...incorrect]);
+    return { q: it.question && it.question.text ? it.question.text : String(it.question||""), a: all, correct: all.indexOf(corr), category: (it.category||"Online"), type };
+  });
+}
+
+// Merge, de-duplicate by normalized question text, then sample
+function mergeDedup(...arrays){
+  const out=[]; const seen=new Set();
+  const norm=(s)=>decode(String(s)).replace(/\s+/g," ").trim().toLowerCase();
+  arrays.flat().forEach(q=>{
+    const key = norm(q.q);
+    if(!seen.has(key)){ seen.add(key); out.push(q); }
+  });
+  return out;
+}
+
+async function getOnlineQuestions(count,mode,catValue,difficulty){
+  const OVERFETCH = Math.max(2, Math.ceil(count/10)+1);
+  const want = count * OVERFETCH;
+  let catId = null;
+  if(catValue && catValue.startsWith("otdb:")) catId = Number(catValue.split(":")[1]);
+  const [a, b] = await Promise.all([
+    fetchFromOpenTDB(want, mode, catId, difficulty).catch(()=>[]),
+    fetchFromTriviaAPI(want, mode, difficulty).catch(()=>[])
+  ]);
+  const merged = mergeDedup(a, b);
+  return sample(merged, count);
+}
+
+/* -------------------- Filters & UI flow -------------------- */
 const filterBy=(bank, cat, mode)=>{
   let pool=bank;
   if(cat!=="All" && !cat.startsWith("otdb:")) pool=pool.filter(q=>(q.category||"Other")===cat);
@@ -162,13 +207,19 @@ async function start(){
   const count=Number($("#count")?.value||10);
   const mode=$("#mode")?.value || "multiple";
   const difficulty=$("#difficulty")?.value || "";
+
   $("#badgeText").textContent = useOnline ? "Online" : "In Progress";
 
   if(useOnline){
     try{
-      let catId=null; if(cat.startsWith("otdb:")) catId=Number(cat.split(":")[1]);
-      const online=await fetchFromOpenTDB(count,mode,catId,difficulty);
-      state.session=online;
+      const online = await getOnlineQuestions(count, mode, cat, difficulty);
+      if(online.length < count){
+        const pool=filterBy(loadBank(), cat, mode);
+        const need=count-online.length;
+        state.session = online.concat(sample(pool.filter(p=>!online.find(o=>o.q===p.q)), need));
+      }else{
+        state.session = online;
+      }
     }catch(e){
       console.warn(e); toast("Online fetch failed — using offline.");
       const pool=filterBy(loadBank(), cat, mode);
@@ -187,13 +238,10 @@ function next(){ if(state.idx < state.session.length-1){ state.idx++; renderQues
 
 window.addEventListener("DOMContentLoaded", async ()=>{
   const bank = loadBank();
-  renderCategoriesLocal(bank); // immediate local categories
+  renderCategoriesLocal(bank);
   reset();
   bindImportExport();
-
-  // Async fetch online categories then refresh select
   fetchOnlineCategories();
-
   document.getElementById("startBtn").addEventListener("click", start);
   document.getElementById("nextBtn").addEventListener("click", next);
   document.getElementById("endBtn").addEventListener("click", endSession);
