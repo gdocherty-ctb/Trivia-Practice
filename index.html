@@ -2,15 +2,147 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>Trivia Practice</title>
   <link rel="manifest" href="manifest.webmanifest">
-  <meta name="theme-color" content="#0f172a">
   <link rel="icon" href="icons/icon-192.png" sizes="192x192">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <style>
+    /* --- American bar neon theme --- */
+    :root{
+      --bg1:#0b0a10;           /* deep night */
+      --bg2:#1b0f1f;           /* burgundy tint */
+      --panel:#12131a;         /* card */
+      --text:#f8fafc;          /* near white */
+      --muted:#94a3b8;         /* slate */
+      --accent:#f43f5e;        /* neon red */
+      --accent2:#38bdf8;       /* neon blue */
+      --right:#22c55e;
+      --wrong:#ef4444;
+    }
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Helvetica, Arial, sans-serif;
+      color:var(--text);
+      background: radial-gradient(1200px 600px at 50% -10%, rgba(56,189,248,.18), transparent 60%),
+                  radial-gradient(900px 600px at 50% 120%, rgba(244,63,94,.18), transparent 65%),
+                  linear-gradient(180deg, var(--bg1), var(--bg2));
+      display:flex; align-items:center; justify-content:center;
+    }
+    .app{ width:100%; max-width:420px; padding:14px; }
+    .card{
+      background:linear-gradient(180deg, rgba(18,19,26,.96), rgba(12,12,18,.96));
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:18px;
+      box-shadow:0 20px 60px rgba(0,0,0,.6), 0 0 30px rgba(244,63,94,.12), 0 0 30px rgba(56,189,248,.12);
+      padding:18px;
+    }
+    .neon{
+      font-weight:800; letter-spacing:.6px; text-align:center; margin:0 0 8px;
+      font-size:28px;
+      text-shadow: 0 0 8px var(--accent), 0 0 14px var(--accent2), 0 0 2px rgba(255,255,255,.7);
+    }
+    .controls{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin:12px 0 14px; }
+    .controls .wide{ grid-column: 1 / -1; }
+    select, button, label.toggle{
+      background:#0f1220; color:var(--text); border:1px solid rgba(255,255,255,.12);
+      border-radius:14px; padding:14px 16px; font-size:18px; line-height:1.2;
+    }
+    label.toggle{ display:flex; align-items:center; gap:10px; justify-content:center; }
+    .btn{ cursor:pointer; }
+    .btn.primary{ border-color: var(--accent); box-shadow:0 0 12px rgba(244,63,94,.25) inset; }
+    .btn:active{ transform:translateY(1px); }
+    .answers{ display:grid; gap:10px; }
+    .answers button{ display:flex; align-items:center; gap:10px; justify-content:flex-start; padding:16px; font-size:18px; }
+    .answers .letter{ 
+      display:inline-grid; place-items:center; width:32px; height:32px; border-radius:8px;
+      background:linear-gradient(180deg, rgba(56,189,248,.25), rgba(244,63,94,.25));
+      color:#fff; font-weight:700;
+    }
+    .answers button.correct{ border-color: var(--right); box-shadow:0 0 0 2px rgba(34,197,94,.35); }
+    .answers button.wrong{ border-color: var(--wrong); box-shadow:0 0 0 2px rgba(239,68,68,.35); }
+    .meta{ display:flex; justify-content:space-between; align-items:center; color:var(--muted); font-size:14px; margin:8px 0; }
+    .result{ font-size:18px; margin:10px 0; text-align:center; }
+    .hidden{ display:none!important; }
+
+    /* Accessibility: larger tap targets */
+    button, select, label.toggle { min-height: 52px; }
+    @media (max-width: 380px){ .neon{font-size:24px;} }
+  </style>
 </head>
 <body>
-  <h1>Trivia Practice (Online-enabled)</h1>
+  <div class="app">
+    <div class="card">
+      <h1 class="neon">Trivia Practice</h1>
+
+      <div class="controls">
+        <select id="category" aria-label="Category" class="wide"></select>
+        <select id="count" aria-label="Number of questions">
+          <option value="5">5 Qs</option>
+          <option value="10">10 Qs</option>
+          <option value="20" selected>20 Qs</option>
+        </select>
+        <select id="mode" aria-label="Question type">
+          <option value="multiple" selected>Multiple choice</option>
+          <option value="truefalse">True / False</option>
+          <option value="mix">Mix</option>
+        </select>
+        <select id="difficulty" aria-label="Difficulty">
+          <option value="">Any diff.</option>
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+        <label class="toggle wide">
+          <input type="checkbox" id="useOnline" />
+          <span>Online pool</span>
+        </label>
+        <button id="startBtn" class="btn primary">Start</button>
+        <button id="resetBtn" class="btn">Reset</button>
+      </div>
+
+      <div id="quiz">
+        <div class="meta">
+          <div id="progress">0/0</div>
+          <div id="score">Score: 0</div>
+          <div id="badgeText">Ready</div>
+        </div>
+
+        <div id="question" class="q" style="font-size:20px;line-height:1.35;margin:8px 0 12px;"></div>
+        <div id="answers" class="answers"></div>
+
+        <div class="meta">
+          <div id="feedback" style="color:#e2e8f0"></div>
+        </div>
+
+        <div class="result hidden" id="result"></div>
+
+        <div class="controls">
+          <button id="nextBtn" class="btn primary hidden wide">Next</button>
+          <button id="endBtn" class="btn hidden wide">End</button>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button id="importBtn" class="btn">Import</button>
+        <button id="exportBtn" class="btn">Export</button>
+        <button id="clearCustomBtn" class="btn">Clear custom</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="hidden" role="status" aria-live="polite"></div>
+
   <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js');
+      });
+    }
+  </script>
 </body>
 </html>

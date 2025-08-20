@@ -28,7 +28,14 @@ const state = {
   onlineCategories: [],   // OpenTDB categories (id + name)
 };
 
-const toast = (m) => { const t = $("#toast"); if (!t) return; t.textContent = m; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),1200); };
+const toast = (m) => {
+  const t = $("#toast");
+  if (!t) { alert(m); return; }
+  t.textContent = m;
+  t.classList.remove("hidden");
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer = setTimeout(()=>t.classList.add("hidden"), 1400);
+};
 const unique = (a) => [...new Set(a)];
 const shuffle = (a) => a.sort(()=>Math.random()-0.5);
 const sample  = (arr, n) => shuffle([...arr]).slice(0, n);
@@ -174,47 +181,28 @@ const reset = () => {
   $("#badgeText").textContent = $("#useOnline").checked ? "Online" : "Ready";
 };
 
-// --- Import/Export (unchanged) ---
+// --- Import/Export helpers when textarea is removed ---
 const bindImportExport = () => {
-  const example = [
-    { q: "DJI stands for Da-Jiang Innovations.", a: ["True","False"], correct: 0, category: "RPAS", type: "truefalse" },
-    { q: "What does RTK stand for?", a: ["Real-Time Kinematics","Rapid Terrain Kit","Relative Track Keep","Realtime Toolkit"], correct: 0, category: "Geospatial", type: "multiple" },
-    { q: "Matrice 350 is made by ______.", a: ["Parrot","Autel","DJI","Skydio"], correct: 2, category: "RPAS", type: "multiple" }
-  ];
-  const ta = document.getElementById("customJson");
-  if (ta) ta.value = JSON.stringify(example, null, 2);
-
   const importBtn = document.getElementById("importBtn");
   const exportBtn = document.getElementById("exportBtn");
   const clearBtn = document.getElementById("clearCustomBtn");
 
   if (importBtn) importBtn.addEventListener("click", ()=>{
+    let text = prompt("Paste an array of questions in JSON:", "[\\n  {\\n    \\"q\\": \\"Question?\\",\\n    \\"a\\": [\\"A\\", \\"B\\", \\"C\\", \\"D\\"],\\n    \\"correct\\": 0,\\n    \\"category\\": \\"Custom\\",\\n    \\"type\\": \\"multiple\\"\\n  }\\n]");
+    if (text == null) return;
     try{
-      const parsed = JSON.parse(document.getElementById("customJson").value);
+      const parsed = JSON.parse(text);
       if (!Array.isArray(parsed)) throw new Error("JSON must be an array");
-      const cleaned = parsed.map(q => {
-        if (!q.q || !Array.isArray(q.a) || typeof q.correct !== "number"){
-          throw new Error("Each item needs q, a[], correct");
-        }
-        return {
-          q: String(q.q),
-          a: q.a.map(String),
-          correct: Number(q.correct),
-          category: q.category ? String(q.category) : "Custom",
-          type: (q.type==="truefalse" ? "truefalse" : "multiple")
-        };
-      });
-      localStorage.setItem(KEY.CUSTOM, JSON.stringify(cleaned));
+      localStorage.setItem(KEY.CUSTOM, JSON.stringify(parsed));
       toast("Imported ✓");
-      reset();
-      renderCategories(loadBank());
+      location.reload();
     }catch(e){
       toast("Import failed: " + e.message);
     }
   });
 
   if (exportBtn) exportBtn.addEventListener("click", ()=>{
-    const bank = loadBank();
+    const bank = JSON.parse(localStorage.getItem(KEY.BANK) || "[]");
     const blob = new Blob([JSON.stringify(bank, null, 2)], {type: "application/json"});
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -225,8 +213,7 @@ const bindImportExport = () => {
   if (clearBtn) clearBtn.addEventListener("click", ()=>{
     localStorage.removeItem(KEY.CUSTOM);
     toast("Cleared custom questions");
-    reset();
-    renderCategories(loadBank());
+    location.reload();
   });
 };
 
@@ -277,55 +264,6 @@ const next = () => {
 
 // --- Init ---
 window.addEventListener("DOMContentLoaded", async () => {
-  // If index.html is minimal, build a basic UI so the app still works
-  if (!document.getElementById("question")) {
-    document.body.innerHTML = `
-      <div class="app" style="font-family:system-ui;padding:20px;max-width:720px;margin:0 auto">
-        <h2 style="margin:0 0 10px">Trivia Practice</h2>
-        <div id="toast" style="position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#0b1220;color:#fff;padding:8px 12px;border-radius:8px;opacity:0;transition:opacity .25s"></div>
-        <div class="controls" style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0">
-          <select id="category"></select>
-          <select id="count">
-            <option value="5">5 Qs</option>
-            <option value="10" selected>10 Qs</option>
-            <option value="20">20 Qs</option>
-          </select>
-          <select id="mode">
-            <option value="multiple" selected>Multiple choice</option>
-            <option value="truefalse">True / False</option>
-            <option value="mix">Mix</option>
-          </select>
-          <select id="difficulty">
-            <option value="">Any difficulty</option>
-            <option value="easy">Easy</option>
-            <option value="medium">Medium</option>
-            <option value="hard">Hard</option>
-          </select>
-          <label><input type="checkbox" id="useOnline" /> Online pool</label>
-          <button id="startBtn">Start</button>
-          <button id="resetBtn">Reset</button>
-        </div>
-        <div class="meta" style="display:flex;gap:12px;color:#555">
-          <div id="progress">0/0</div> <div id="score">Score: 0</div> <div id="badgeText">Ready</div>
-        </div>
-        <div id="question" class="q" style="margin:10px 0 8px"></div>
-        <div id="answers" class="answers" style="display:grid;gap:8px"></div>
-        <div class="meta" style="display:flex;gap:12px;color:#555"><div id="feedback"></div></div>
-        <div class="result hidden" id="result"></div>
-        <div class="controls" style="display:flex;gap:8px;margin-top:10px">
-          <button id="nextBtn" class="hidden">Next</button>
-          <button id="endBtn" class="hidden">End</button>
-        </div>
-        <textarea id="customJson" style="width:100%;min-height:120px;margin-top:14px"></textarea>
-        <div class="controls" style="display:flex;gap:8px;margin-top:8px">
-          <button id="importBtn">Import</button>
-          <button id="exportBtn">Export</button>
-          <button id="clearCustomBtn">Clear custom</button>
-        </div>
-      </div>`;
-  }
-
-  // Try to fetch online categories silently
   await fetchOnlineCategories();
   renderCategories(loadBank());
   reset();
@@ -336,7 +274,6 @@ window.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("resetBtn").addEventListener("click", reset);
   bindImportExport();
 
-  // When user toggles online, update badge
   document.getElementById("useOnline").addEventListener("change", () => {
     document.getElementById("badgeText").textContent = document.getElementById("useOnline").checked ? "Online" : "Ready";
   });
