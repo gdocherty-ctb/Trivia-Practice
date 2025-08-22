@@ -2,217 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Trivia Practice</title>
-  <!-- PWA fullscreen -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Trivia Practice">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="theme-color" content="#0b0a10">
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="apple-touch-icon" href="icons/icon-192.png">
-  <link rel="icon" sizes="192x192" href="icons/icon-192.png">
-  <link rel="icon" sizes="512x512" href="icons/icon-512.png">
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#ffffff"/>
   <style>
-    :root{--bg1:#0b0a10;--bg2:#16121b;--card:#11131a;--text:#f8fafc;--muted:#a3b0c3;--accent:#ff4d6d;--accent2:#49c6ff;--right:#22c55e;--wrong:#ef4444}
-    html,body{height:100%}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;color:var(--text);background:radial-gradient(1200px 600px at 50% -20%,rgba(73,198,255,.2),transparent 55%),radial-gradient(900px 600px at 50% 120%,rgba(255,77,109,.2),transparent 60%),linear-gradient(180deg,var(--bg1),var(--bg2));display:flex;align-items:center;justify-content:center;padding:12px}
-    .wrap{width:100%;max-width:430px}
-    .card{background:var(--card);border:1px solid rgba(255,255,255,.08);border-radius:18px;box-shadow:0 20px 80px rgba(0,0,0,.55);padding:16px}
-    h1{margin:6px 0 12px;text-align:center;font-size:28px;letter-spacing:.4px;text-shadow:0 0 10px var(--accent2),0 0 6px var(--accent)}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .wide{grid-column:1/-1}
-    label{display:block;font-size:13px;color:var(--muted);margin:6px 2px}
-    select,button{width:100%;background:#0f1320;color:var(--text);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:14px 16px;font-size:17px;line-height:1.2}
-    .checkbox-inline{display:flex;align-items:center;gap:8px;margin-top:0}
-    .checkbox-inline input{width:18px;height:18px;accent-color:var(--accent)}
-    button{cursor:pointer}
-    button.primary{border-color:var(--accent);box-shadow:0 0 0 2px rgba(255,77,109,.25) inset}
-    .meta{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:14px;margin:10px 2px 6px}
-    .q{font-size:19px;line-height:1.35;margin:8px 0 12px}
-    .answers{display:grid;gap:10px}
-    .answers button{display:flex;align-items:center;gap:10px;justify-content:flex-start;padding:16px;font-size:18px}
-    .answers .badge{width:32px;height:32px;border-radius:8px;display:inline-grid;place-items:center;font-weight:700;background:linear-gradient(180deg,rgba(73,198,255,.28),rgba(255,77,109,.28))}
-    .answers button.correct{border-color:var(--right);box-shadow:0 0 0 2px rgba(34,197,94,.35)}
-    .answers button.wrong{border-color:var(--wrong);box-shadow:0 0 0 2px rgba(239,68,68,.35)}
-    .feedback{text-align:center;font-size:16px;min-height:22px;margin:6px 0 4px}
-    .summary{text-align:center;color:var(--muted);font-size:14px;margin-top:6px}
-    .hidden{display:none!important}
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h1 { color: #333; }
+    select, button { margin-top: 10px; padding: 10px; font-size: 16px; }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="card">
-      <h1>Trivia Practice</h1>
-      <div class="grid">
-        <div class="wide">
-          <label for="category">Category</label>
-          <select id="category">
-            <optgroup label="Core Categories">
-              <option value="History">History</option>
-              <option value="Geography">Geography</option>
-              <option value="Science">Science</option>
-              <option value="Sports">Sports</option>
-              <option value="Entertainment">Entertainment</option>
-              <option value="Literature">Literature</option>
-            </optgroup>
-            <optgroup label="Other Popular Categories">
-              <option value="General Knowledge">General Knowledge</option>
-              <option value="Pop Culture">Pop Culture</option>
-              <option value="Food and Drink">Food and Drink</option>
-              <option value="Art and Culture">Art and Culture</option>
-              <option value="Animals">Animals</option>
-            </optgroup>
-          </select>
-        </div>
-        <div class="wide">
-          <label for="era">Generation</label>
-          <select id="era">
-            <option value="any">Any generation</option>
-            <option value="pre-silent">Pre‑Silent (before 1928)</option>
-            <option value="silent">Silent (1928–1945)</option>
-            <option value="boomers">Baby Boomers (1946–1964)</option>
-            <option value="genx">Generation X (1965–1980)</option>
-            <option value="millennials">Millennials (1981–1996)</option>
-            <option value="genz">Generation Z (1997–2012)</option>
-            <option value="genalpha">Generation Alpha (2013–2025)</option>
-          </select>
-        </div>
-        <div>
-          <label for="difficulty">Difficulty</label>
-          <select id="difficulty">
-            <option value="">Any</option>
-            <option value="easy">Easy</option>
-            <option value="medium">Medium</option>
-            <option value="hard">Hard</option>
-          </select>
-        </div>
-        <div>
-          <label for="numQuestions">Questions</label>
-          <select id="numQuestions">
-            <option value="5">5 Qs</option>
-            <option value="10" selected>10 Qs</option>
-            <option value="20">20 Qs</option>
-          </select>
-        </div>
-        <div class="grid" style="grid-template-columns:1fr auto;gap:8px;align-items:center;grid-column:1/-1">
-          <div>
-            <label for="qType">Type</label>
-            <select id="qType">
-              <option value="multiple" selected>Multiple</option>
-              <option value="boolean">True/False</option>
-            </select>
-          </div>
-          <div class="checkbox-inline">
-            <input id="onlinePool" type="checkbox" />
-            <label for="onlinePool">Online pool</label>
-          </div>
-        </div>
-        <div class="grid wide">
-          <button id="startBtn" class="primary">Start</button>
-          <button id="refreshBtn">Refresh</button>
-        </div>
-      </div>
-      <div class="meta">
-        <div id="progress">0/0</div>
-        <div id="score">Score: 0 · High: 0</div>
-        <div id="modeLabel">Ready</div>
-      </div>
-      <div id="question" class="q">Tap Start to begin.</div>
-      <div id="answers" class="answers"></div>
-      <div id="feedback" class="feedback"></div>
-      <button id="nextBtn" class="primary hidden wide">Next Question</button>
-      <div id="summary" class="summary"></div>
-    </div>
-  </div>
-  <script>
-    let questions=[],current=0,score=0,high=0;
-    const $ = (id)=>document.getElementById(id);
-    const startBtn=$("startBtn"), refreshBtn=$("refreshBtn"), nextBtn=$("nextBtn");
-    const qEl=$("question"), ansEl=$("answers"), feedback=$("feedback"), summary=$("summary"),
-          progress=$("progress"), scoreEl=$("score"), modeLabel=$("modeLabel");
-
-    const CAT_TO_OTDB = {
-      "General Knowledge": 9,
-      "History": 23,
-      "Geography": 22,
-      "Science": 17,
-      "Sports": 21,
-      "Literature": 10,
-      "Entertainment": [11,12,13,14,15,16],
-      "Pop Culture": [11,12,14,32,42],
-      "Food and Drink": 49,
-      "Art and Culture": [25,26],
-      "Animals": 27
-    };
-    function pickCategoryId(curated){ const entry = CAT_TO_OTDB[curated]; return Array.isArray(entry)? entry[Math.floor(Math.random()*entry.length)] : entry||null; }
-    function buildOTDBUrl(){
-      const curatedCat = $("category").value, difficulty = $("difficulty").value, amount = Number($("numQuestions").value||10), type = $("qType").value;
-      const params = new URLSearchParams({ amount: String(amount) });
-      const id = pickCategoryId(curatedCat); if(id) params.set('category', String(id));
-      if(difficulty) params.set('difficulty', difficulty);
-      if(type) params.set('type', type);
-      return `https://opentdb.com/api.php?${params.toString()}`;
-    }
-    async function fetchQuestions(){
-      const online = $("onlinePool").checked, amount = Number($("numQuestions").value||10);
-      if(!online){
-        return Array.from({length:amount},(_,i)=>({
-          question:`Sample Q${i+1} in ${$("category").value}`,
-          correct:"Correct",
-          answers:["Correct","Wrong1","Wrong2","Wrong3"]
-        }));
-      }
-      try{
-        const url = buildOTDBUrl();
-        const res = await fetch(url, { cache:'no-store' });
-        const data = await res.json();
-        const raw = Array.isArray(data.results) ? data.results : [];
-        if(raw.length === 0){
-          return Array.from({length:amount},(_,i)=>({
-            question:`Backup Q${i+1} (${$("category").value})`,
-            correct:"Correct",
-            answers:["Correct","Wrong1","Wrong2","Wrong3"]
-          }));
-        }
-        return raw.map(q=>({
-          question:q.question,
-          correct:q.correct_answer,
-          answers:[...q.incorrect_answers, q.correct_answer].sort(()=>Math.random()-.5)
-        }));
-      }catch(err){
-        return Array.from({length:amount},(_,i)=>({
-          question:`Offline Q${i+1} (${$("category").value})`,
-          correct:"Correct",
-          answers:["Correct","Wrong1","Wrong2","Wrong3"]
-        }));
-      }
-    }
-    function showQuestion(){
-      if(current>=questions.length){
-        qEl.textContent="Session finished! Tap Refresh for a new set.";
-        ansEl.innerHTML=""; nextBtn.classList.add("hidden");
-        summary.textContent=`Final Score: ${score}/${questions.length}`; return;
-      }
-      const q=questions[current]; progress.textContent=`${current+1}/${questions.length}`;
-      qEl.innerHTML=q.question; ansEl.innerHTML="";
-      q.answers.forEach((ans,i)=>{
-        const btn=document.createElement("button"); btn.type='button';
-        btn.innerHTML=`<span class='badge'>${String.fromCharCode(65+i)}</span> ${ans}`;
-        btn.onclick=()=>selectAnswer(btn,ans,q.correct); ansEl.appendChild(btn);
-      });
-      feedback.textContent=""; summary.textContent=""; nextBtn.classList.add("hidden");
-    }
-    function selectAnswer(btn,ans,correct){
-      Array.from(ansEl.children).forEach(b=>b.disabled=true);
-      if(ans===correct){ btn.classList.add("correct"); feedback.textContent="✔️ Correct!"; score++; }
-      else { btn.classList.add("wrong"); feedback.textContent=`✖️ Incorrect. Correct: ${correct}`; }
-      high=Math.max(high,score); scoreEl.textContent=`Score: ${score} · High: ${high}`; nextBtn.classList.remove("hidden");
-    }
-    startBtn.addEventListener('click', async ()=>{ score=0; current=0; modeLabel.textContent=$("onlinePool").checked?"Online":"Offline"; questions = await fetchQuestions(); showQuestion(); });
-    refreshBtn.addEventListener('click', async ()=>{ score=0; current=0; modeLabel.textContent=$("onlinePool").checked?"Online":"Offline"; questions = await fetchQuestions(); showQuestion(); });
-    nextBtn.addEventListener('click', ()=>{ current++; showQuestion(); });
-  </script>
+  <h1>Trivia Practice</h1>
+  <p>Select a category and start practicing!</p>
+  <select id="category"></select>
+  <button onclick="startTrivia()">Start</button>
+  <div id="question-container"></div>
+  <script src="app.js"></script>
 </body>
 </html>
