@@ -2,22 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Trivia Practice</title>
-  <link rel="manifest" href="manifest.webmanifest" />
-  <meta name="theme-color" content="#ffffff"/>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    h1 { color: #333; }
-    select, button { margin-top: 10px; padding: 10px; font-size: 16px; }
-  </style>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Trivia Practice">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0b0a10">
+  <link rel="manifest" href="manifest.webmanifest">
 </head>
 <body>
-  <h1>Trivia Practice</h1>
-  <p>Select a category and start practicing!</p>
-  <select id="category"></select>
-  <button onclick="startTrivia()">Start</button>
-  <div id="question-container"></div>
   <script src="app.js"></script>
 </body>
 </html>
