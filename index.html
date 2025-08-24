@@ -9,9 +9,139 @@
   <meta name="apple-mobile-web-app-title" content="Trivia Practice">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#0b0a10">
-  <link rel="manifest" href="manifest.webmanifest">
+  <style>
+    :root{--bg1:#0b0a10;--bg2:#16121b;--card:#11131a;--text:#f8fafc;--muted:#a3b0c3;--accent:#ff4d6d;--accent2:#49c6ff;--right:#22c55e;--wrong:#ef4444}
+    html,body{height:100%}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;color:var(--text);background:linear-gradient(180deg,var(--bg1),var(--bg2));display:flex;align-items:center;justify-content:center;padding:8px;min-height:100vh}
+    .wrap{width:100%;max-width:375px}
+    .card{background:var(--card);border:1px solid rgba(255,255,255,.08);border-radius:16px;box-shadow:0 16px 64px rgba(0,0,0,.55);padding:12px}
+    h1{text-align:center;font-size:22px;text-shadow:0 0 8px var(--accent2),0 0 5px var(--accent)}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .wide{grid-column:1/-1}
+    label{display:block;font-size:12px;color:var(--muted);margin:4px 2px}
+    select,button{width:100%;background:#0f1320;color:var(--text);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px;font-size:15px}
+    .checkbox-inline{display:flex;align-items:center;gap:6px;justify-self:end}
+    .checkbox-inline input{width:16px;height:16px;accent-color:var(--accent)}
+    button.primary{border-color:var(--accent);box-shadow:0 0 0 2px rgba(255,77,109,.22) inset}
+    .meta{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:12px;margin:8px 2px 4px}
+    .q{font-size:17px;margin:6px 0 8px}
+    .answers{display:grid;gap:8px}
+    .answers button{display:flex;align-items:center;gap:8px;justify-content:flex-start;padding:12px;font-size:16px}
+    .answers .badge{width:26px;height:26px;border-radius:7px;display:inline-grid;place-items:center;font-weight:700;background:linear-gradient(180deg,rgba(73,198,255,.28),rgba(255,77,109,.28))}
+    .feedback{text-align:center;font-size:14px;min-height:20px;margin:4px 0 2px}
+    .summary{text-align:center;color:var(--muted);font-size:12px;margin-top:4px}
+    .hidden{display:none!important}
+    #timer{font-weight:bold;color:var(--accent2);margin-left:6px}
+  </style>
 </head>
 <body>
-  <script src="app.js"></script>
+  <div class="wrap">
+    <div class="card">
+      <h1>Trivia Practice</h1>
+      <div class="grid">
+        <div class="wide">
+          <label for="category">Category</label>
+          <select id="category"></select>
+        </div>
+        <div>
+          <label for="generation">Generation</label>
+          <select id="generation">
+            <option value="">Any</option>
+            <option value="pre-silent">Pre-Silent (Before 1928)</option>
+            <option value="silent">Silent Gen (1928-1945)</option>
+            <option value="boomers">Baby Boomers (1946-1964)</option>
+            <option value="genx">Gen X (1965-1980)</option>
+            <option value="millennials">Millennials (1981-1996)</option>
+            <option value="genz">Gen Z (1997-2012)</option>
+            <option value="genalpha">Gen Alpha (2013-2025)</option>
+          </select>
+        </div>
+        <div>
+          <label for="difficulty">Difficulty</label>
+          <select id="difficulty">
+            <option value="">Any</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
+        <div>
+          <label for="numQuestions">Questions</label>
+          <select id="numQuestions">
+            <option value="5">5 Qs</option>
+            <option value="10" selected>10 Qs</option>
+            <option value="20">20 Qs</option>
+          </select>
+        </div>
+        <div>
+          <label for="qType">Type</label>
+          <select id="qType">
+            <option value="multiple" selected>Multiple</option>
+            <option value="boolean">True/False</option>
+          </select>
+        </div>
+        <div class="checkbox-inline wide">
+          <input id="onlinePool" type="checkbox" checked />
+          <label for="onlinePool">Online pool</label>
+        </div>
+        <button id="startBtn" class="primary wide">Start</button>
+        <button id="refreshBtn" class="wide">Refresh</button>
+      </div>
+      <div class="meta">
+        <div id="progress">0/0</div>
+        <div id="score">Score: 0 · High: 0</div>
+        <div id="modeLabel">Ready</div>
+        <div id="timer">--</div>
+      </div>
+      <div id="question" class="q">Tap Start to begin.</div>
+      <div id="answers" class="answers"></div>
+      <div id="feedback" class="feedback"></div>
+      <button id="nextBtn" class="primary hidden wide">Next Question</button>
+      <div id="summary" class="summary"></div>
+    </div>
+  </div>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const CATEGORY_LABELS = ["All","Popular Culture","General Knowledge","Entertainment","Animals","Geography","Politics","Science","History","Sport","Music","Literature","Art and Culture","Christmas","Halloween","Movies","TV Shows"];
+
+      const CAT_TO_OTDB = { "All": null, "General Knowledge": 9, "Geography": 22, "Science": 17, "History": 23, "Sport": 21, "Animals": 27, "Music": 12, "Literature": 10, "Movies": 11, "TV Shows": 14, "Politics": 24, "Entertainment": [11,12,13,14,15,16,26,32], "Popular Culture": [11,12,14,26,32], "Art and Culture": [25,26], "Christmas": ["keyword"], "Halloween": ["keyword"] };
+
+      const KEYWORDS = { "Christmas": ["christmas","xmas","santa","reindeer","mistletoe","nativity","yuletide","noel"], "Halloween": ["halloween","pumpkin","jack-o-lantern","ghost","vampire","werewolf","witch","spooky","trick or treat"] };
+
+      const $ = (id)=>document.getElementById(id);
+      const categorySel=$("category"), generationSel=$("generation"), difficultySel=$("difficulty"), numSel=$("numQuestions"), typeSel=$("qType"), onlinePool=$("onlinePool");
+      const startBtn=$("startBtn"), refreshBtn=$("refreshBtn"), nextBtn=$("nextBtn");
+      const qEl=$("question"), ansEl=$("answers"), feedback=$("feedback"), summary=$("summary"), progress=$("progress"), scoreEl=$("score"), modeLabel=$("modeLabel"), timerEl=$("timer");
+
+      if(categorySel){ categorySel.innerHTML = CATEGORY_LABELS.map(c=>`<option value="${c}">${c}</option>`).join(""); }
+
+      let questions=[], current=0, score=0, high=0, timer=null, timeLeft=20, questionActive=false;
+
+      function pickCategoryId(label){ const entry = CAT_TO_OTDB[label]; if(entry===null||entry===undefined) return null; if(Array.isArray(entry)){ if(entry.length===1&&entry[0]==="keyword") return "keyword"; return entry[Math.floor(Math.random()*entry.length)]; } return entry; }
+
+      function buildOTDBUrl(){ const curated=categorySel.value, diff=difficultySel.value, amount=Number(numSel.value||10), type=typeSel.value; const p=new URLSearchParams({amount:String(amount)}); const id=pickCategoryId(curated); if(id&&id!=="keyword") p.set('category',String(id)); if(diff) p.set('difficulty',diff); if(type) p.set('type',type); return `https://opentdb.com/api.php?${p.toString()}`; }
+
+      const norm=s=>(s||"").toLowerCase();
+
+      function keywordFilterIfNeeded(curated,items){ const keys=KEYWORDS[curated]; if(!keys) return items; const filtered=items.filter(q=>{ const hay=norm(q.question+" "+q.correct+" "+q.answers.join(" ")); return keys.some(k=>hay.includes(k)); }); return filtered.length>=Math.min(items.length,3)?filtered:items; }
+
+      function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+      async function fetchQuestions(){ const online=onlinePool && onlinePool.checked; const amount=Number(numSel.value||10); const curated=categorySel.value; const generation=generationSel.value; if(!online){ return Array.from({length:amount},(_,i)=>({question:`Sample Q${i+1} (${curated} ${generation})`, correct:"Correct", answers:shuffle(["Correct","Wrong1","Wrong2","Wrong3"])})); }
+        try{ const url=buildOTDBUrl(); const res=await fetch(url,{cache:'no-store'}); const data=await res.json(); let raw=Array.isArray(data.results)?data.results:[]; let normalized=raw.map(q=>({question:q.question, correct:q.correct_answer, answers:shuffle([...q.incorrect_answers,q.correct_answer])}));
+          if(pickCategoryId(curated)==="keyword"){ if(normalized.length<amount){ for(const cid of [9,11,14]){ const extraP=new URLSearchParams({amount:String(amount),category:String(cid)}); const extraRes=await fetch(`https://opentdb.com/api.php?${extraP.toString()}`,{cache:'no-store'}); const extra=await extraRes.json(); const more=Array.isArray(extra.results)?extra.results:[]; normalized.push(...more.map(q=>({question:q.question,correct:q.correct_answer,answers:shuffle([...q.incorrect_answers,q.correct_answer])}))); if(normalized.length>=amount*3) break; } } normalized=keywordFilterIfNeeded(curated,normalized); }
+          const seen=new Set(); const uniq=[]; for(const q of normalized){ const key=norm(q.question); if(!seen.has(key)){ seen.add(key); uniq.push(q);} if(uniq.length>=amount) break; } while(uniq.length<amount){ uniq.push({question:`Backup Q${uniq.length+1} (${curated} ${generation})`, correct:"Correct", answers:shuffle(["Correct","Wrong1","Wrong2","Wrong3"])}); } return uniq; }catch(e){ return Array.from({length:amount},(_,i)=>({question:`Offline Q${i+1} (${categorySel.value} ${generation})`, correct:"Correct", answers:shuffle(["Correct","Wrong1","Wrong2","Wrong3"])})); } }
+
+      function startTimer(){ clearInterval(timer); timeLeft=20; if(timerEl) timerEl.textContent=`${timeLeft}s`; questionActive=true; timer=setInterval(()=>{ timeLeft--; if(timerEl) timerEl.textContent=`${timeLeft}s`; if(timeLeft<=0){ clearInterval(timer); if(questionActive){ feedback.textContent=`⏰ Time's up! 0 points. Correct: ${questions[current].correct}`; nextBtn.classList.remove('hidden'); high=Math.max(high,score); scoreEl.textContent=`Score: ${score} · High: ${high}`; questionActive=false; } } },1000); }
+
+      function showQuestion(){ if(current>=questions.length){ qEl.textContent="Session finished! Tap Refresh for a new set."; ansEl.innerHTML=""; nextBtn.classList.add("hidden"); summary.textContent=`Final Score: ${score}/${questions.length}`; clearInterval(timer); return; } const q=questions[current]; progress.textContent=`${current+1}/${questions.length}`; qEl.innerHTML=q.question; ansEl.innerHTML=""; q.answers.forEach((ans,i)=>{ const b=document.createElement('button'); b.type='button'; b.innerHTML=`<span class='badge'>${String.fromCharCode(65+i)}</span> ${ans}`; b.onclick=()=>selectAnswer(b,ans,q.correct); ansEl.appendChild(b); }); feedback.textContent=""; summary.textContent=""; nextBtn.classList.add("hidden"); startTimer(); }
+
+      function selectAnswer(btn,ans,correct){ if(!questionActive) return; questionActive=false; clearInterval(timer); Array.from(ansEl.children).forEach(b=>b.disabled=true); if(ans===correct){ btn.classList.add('correct'); feedback.textContent='✔️ Correct!'; score++; } else { btn.classList.add('wrong'); feedback.textContent=`✖️ Incorrect. Correct: ${correct}`; } high=Math.max(high,score); scoreEl.textContent=`Score: ${score} · High: ${high}`; nextBtn.classList.remove('hidden'); }
+
+      if(startBtn) startBtn.addEventListener('click', async ()=>{ score=0; current=0; modeLabel.textContent=onlinePool && onlinePool.checked?"Online":"Offline"; questions=await fetchQuestions(); showQuestion(); });
+      if(refreshBtn) refreshBtn.addEventListener('click', async ()=>{ score=0; current=0; modeLabel.textContent=onlinePool && onlinePool.checked?"Online":"Offline"; questions=await fetchQuestions(); showQuestion(); });
+      if(nextBtn) nextBtn.addEventListener('click', ()=>{ current++; showQuestion(); });
+    });
+  </script>
 </body>
 </html>
