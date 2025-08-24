@@ -1,0 +1,799 @@
+[
+  {
+    "question": "Who was the first Emperor of Rome?",
+    "answers": [
+      "Augustus",
+      "Julius Caesar",
+      "Nero",
+      "Tiberius"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "Ancient",
+    "tags": [
+      "Rome",
+      "leaders"
+    ]
+  },
+  {
+    "question": "Which ancient civilization built the pyramids at Giza?",
+    "answers": [
+      "Egyptians",
+      "Sumerians",
+      "Hittites",
+      "Persians"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "Ancient",
+    "tags": [
+      "Egypt",
+      "architecture"
+    ]
+  },
+  {
+    "question": "What writing system did the Sumerians develop?",
+    "answers": [
+      "Cuneiform",
+      "Hieroglyphs",
+      "Phoenician alphabet",
+      "Linear B"
+    ],
+    "correctIndex": 0,
+    "difficulty": "medium",
+    "era": "Ancient",
+    "tags": [
+      "Mesopotamia",
+      "writing"
+    ]
+  },
+  {
+    "question": "Who led the Macedonian conquest of the Persian Empire?",
+    "answers": [
+      "Alexander the Great",
+      "Philip II",
+      "Darius I",
+      "Seleucus I"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "Ancient",
+    "tags": [
+      "Greece",
+      "Persia"
+    ]
+  },
+  {
+    "question": "The Battle of Thermopylae pitted Greeks against which empire?",
+    "answers": [
+      "Achaemenid Persia",
+      "Rome",
+      "Carthage",
+      "Assyria"
+    ],
+    "correctIndex": 0,
+    "difficulty": "medium",
+    "era": "Ancient",
+    "tags": [
+      "Greece",
+      "Persia",
+      "battles"
+    ]
+  },
+  {
+    "question": "Which epic poem is attributed to Homer and concerns the Trojan War?",
+    "answers": [
+      "The Iliad",
+      "The Aeneid",
+      "The Odyssey",
+      "Metamorphoses"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "Ancient",
+    "tags": [
+      "literature",
+      "Greece"
+    ]
+  },
+  {
+    "question": "Which Carthaginian general crossed the Alps with elephants?",
+    "answers": [
+      "Hannibal Barca",
+      "Hasdrubal",
+      "Mago",
+      "Hamilcar"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "Ancient",
+    "tags": [
+      "Carthage",
+      "Rome"
+    ]
+  },
+  {
+    "question": "What city-state was known for its strict military society in ancient Greece?",
+    "answers": [
+      "Sparta",
+      "Athens",
+      "Corinth",
+      "Thebes"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "Ancient",
+    "tags": [
+      "Greece"
+    ]
+  },
+  {
+    "question": "Which queen of Egypt formed alliances with Julius Caesar and Mark Antony?",
+    "answers": [
+      "Cleopatra VII",
+      "Nefertiti",
+      "Hatshepsut",
+      "Arsinoe II"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "Ancient",
+    "tags": [
+      "Egypt",
+      "Rome"
+    ]
+  },
+  {
+    "question": "Which ancient wonder stood at the harbor of Alexandria?",
+    "answers": [
+      "Lighthouse of Alexandria",
+      "Colossus of Rhodes",
+      "Mausoleum at Halicarnassus",
+      "Temple of Artemis"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "Ancient",
+    "tags": [
+      "wonders"
+    ]
+  },
+  {
+    "question": "What pandemic devastated Europe in the 14th century?",
+    "answers": [
+      "Black Death",
+      "Spanish Flu",
+      "Smallpox",
+      "Cholera"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "Medieval",
+    "tags": [
+      "disease",
+      "Europe"
+    ]
+  },
+  {
+    "question": "Which empire used Constantinople as its capital for most of the Middle Ages?",
+    "answers": [
+      "Byzantine Empire",
+      "Holy Roman Empire",
+      "Ottoman Empire",
+      "Frankish Empire"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "Medieval",
+    "tags": [
+      "Byzantium"
+    ]
+  },
+  {
+    "question": "Who was crowned Holy Roman Emperor on Christmas Day 800 CE?",
+    "answers": [
+      "Charlemagne",
+      "Otto I",
+      "Frederick I Barbarossa",
+      "Louis the Pious"
+    ],
+    "correctIndex": 0,
+    "difficulty": "medium",
+    "era": "Medieval",
+    "tags": [
+      "Europe",
+      "emperors"
+    ]
+  },
+  {
+    "question": "Which religion spread rapidly across the Middle East and North Africa in the 7th century?",
+    "answers": [
+      "Islam",
+      "Christianity",
+      "Zoroastrianism",
+      "Judaism"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "Medieval",
+    "tags": [
+      "religion"
+    ]
+  },
+  {
+    "question": "The Norman Conquest of England began with which battle in 1066?",
+    "answers": [
+      "Battle of Hastings",
+      "Battle of Tours",
+      "Battle of Agincourt",
+      "Battle of Stamford Bridge"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "Medieval",
+    "tags": [
+      "England",
+      "conquest"
+    ]
+  },
+  {
+    "question": "Who wrote the medieval work 'The Divine Comedy'?",
+    "answers": [
+      "Dante Alighieri",
+      "Geoffrey Chaucer",
+      "Thomas Aquinas",
+      "Petrarch"
+    ],
+    "correctIndex": 0,
+    "difficulty": "medium",
+    "era": "Medieval",
+    "tags": [
+      "literature",
+      "Italy"
+    ]
+  },
+  {
+    "question": "Which group of Scandinavian sailors and raiders impacted Europe from the 8th to 11th centuries?",
+    "answers": [
+      "Vikings",
+      "Huns",
+      "Magyars",
+      "Mongols"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "Medieval",
+    "tags": [
+      "Europe",
+      "exploration"
+    ]
+  },
+  {
+    "question": "Who painted the ceiling of the Sistine Chapel?",
+    "answers": [
+      "Michelangelo",
+      "Raphael",
+      "Leonardo da Vinci",
+      "Botticelli"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "Early Modern",
+    "tags": [
+      "art",
+      "Renaissance"
+    ]
+  },
+  {
+    "question": "Which English king founded the Church of England?",
+    "answers": [
+      "Henry VIII",
+      "Edward VI",
+      "James I",
+      "Henry VII"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "Early Modern",
+    "tags": [
+      "England",
+      "religion"
+    ]
+  },
+  {
+    "question": "Which 1494 treaty divided the New World between Spain and Portugal?",
+    "answers": [
+      "Treaty of Tordesillas",
+      "Treaty of Utrecht",
+      "Treaty of Paris",
+      "Treaty of Zaragoza"
+    ],
+    "correctIndex": 0,
+    "difficulty": "medium",
+    "era": "Early Modern",
+    "tags": [
+      "exploration"
+    ]
+  },
+  {
+    "question": "Who proposed that planets orbit the sun in elliptical paths?",
+    "answers": [
+      "Johannes Kepler",
+      "Nicolaus Copernicus",
+      "Galileo Galilei",
+      "Tycho Brahe"
+    ],
+    "correctIndex": 0,
+    "difficulty": "medium",
+    "era": "Early Modern",
+    "tags": [
+      "science",
+      "astronomy"
+    ]
+  },
+  {
+    "question": "What movement challenged Catholic doctrine and led to Protestant churches?",
+    "answers": [
+      "Reformation",
+      "Counter-Reformation",
+      "Enlightenment",
+      "Great Awakening"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "Early Modern",
+    "tags": [
+      "religion",
+      "Europe"
+    ]
+  },
+  {
+    "question": "Who wrote the 'Declaration of Independence'?",
+    "answers": [
+      "Thomas Jefferson",
+      "John Adams",
+      "Benjamin Franklin",
+      "James Madison"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "1700s",
+    "tags": [
+      "USA",
+      "founding documents"
+    ]
+  },
+  {
+    "question": "Which revolution began in 1789 and led to the rise of Napoleon?",
+    "answers": [
+      "French Revolution",
+      "American Revolution",
+      "Haitian Revolution",
+      "Glorious Revolution"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "1700s",
+    "tags": [
+      "France",
+      "revolution"
+    ]
+  },
+  {
+    "question": "James Watt improved which technology, fueling the Industrial Revolution?",
+    "answers": [
+      "Steam engine",
+      "Spinning jenny",
+      "Power loom",
+      "Telegraph"
+    ],
+    "correctIndex": 0,
+    "difficulty": "medium",
+    "era": "1700s",
+    "tags": [
+      "industry",
+      "technology"
+    ]
+  },
+  {
+    "question": "Who was known as the 'Empress of Russia' and promoted Westernization?",
+    "answers": [
+      "Catherine the Great",
+      "Elizabeth I",
+      "Marie Antoinette",
+      "Anna of Russia"
+    ],
+    "correctIndex": 0,
+    "difficulty": "medium",
+    "era": "1700s",
+    "tags": [
+      "Russia",
+      "monarchs"
+    ]
+  },
+  {
+    "question": "Captain James Cook is best known for voyages to which region?",
+    "answers": [
+      "Pacific Ocean",
+      "Arctic",
+      "Atlantic coast",
+      "Indian Ocean"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "1700s",
+    "tags": [
+      "exploration",
+      "Pacific"
+    ]
+  },
+  {
+    "question": "Which conflict between the North and South occurred in the United States from 1861–1865?",
+    "answers": [
+      "American Civil War",
+      "Mexican–American War",
+      "War of 1812",
+      "Spanish–American War"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "1800s",
+    "tags": [
+      "USA",
+      "wars"
+    ]
+  },
+  {
+    "question": "Who unified Germany in the 19th century using 'Realpolitik'?",
+    "answers": [
+      "Otto von Bismarck",
+      "Kaiser Wilhelm I",
+      "Helmuth von Moltke",
+      "Friedrich Ebert"
+    ],
+    "correctIndex": 0,
+    "difficulty": "medium",
+    "era": "1800s",
+    "tags": [
+      "Germany",
+      "unification"
+    ]
+  },
+  {
+    "question": "Which invention is associated with Samuel Morse?",
+    "answers": [
+      "Telegraph",
+      "Telephone",
+      "Light bulb",
+      "Phonograph"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "1800s",
+    "tags": [
+      "technology",
+      "communications"
+    ]
+  },
+  {
+    "question": "The Emancipation Proclamation was issued by which U.S. president?",
+    "answers": [
+      "Abraham Lincoln",
+      "Ulysses S. Grant",
+      "Andrew Johnson",
+      "James Buchanan"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "1800s",
+    "tags": [
+      "USA",
+      "civil war"
+    ]
+  },
+  {
+    "question": "Which artistic movement included painters like Monet and Renoir?",
+    "answers": [
+      "Impressionism",
+      "Romanticism",
+      "Realism",
+      "Post-Impressionism"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "1800s",
+    "tags": [
+      "art",
+      "France"
+    ]
+  },
+  {
+    "question": "The Meiji Restoration transformed which country in the late 19th century?",
+    "answers": [
+      "Japan",
+      "China",
+      "Korea",
+      "Thailand"
+    ],
+    "correctIndex": 0,
+    "difficulty": "medium",
+    "era": "1800s",
+    "tags": [
+      "Japan",
+      "modernization"
+    ]
+  },
+  {
+    "question": "Which event sparked World War I in 1914?",
+    "answers": [
+      "Assassination of Archduke Franz Ferdinand",
+      "German invasion of Belgium",
+      "Sinking of the Lusitania",
+      "Zimmermann Telegram"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "1900s",
+    "tags": [
+      "WWI",
+      "Europe"
+    ]
+  },
+  {
+    "question": "Which 1917 event led Russia to withdraw from World War I?",
+    "answers": [
+      "Bolshevik Revolution",
+      "Treaty of Brest-Litovsk",
+      "February Revolution",
+      "Tsar Nicholas II abdication"
+    ],
+    "correctIndex": 0,
+    "difficulty": "medium",
+    "era": "1900s",
+    "tags": [
+      "Russia",
+      "WWI"
+    ]
+  },
+  {
+    "question": "Who was the British Prime Minister during most of World War II?",
+    "answers": [
+      "Winston Churchill",
+      "Neville Chamberlain",
+      "Clement Attlee",
+      "Stanley Baldwin"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "1900s",
+    "tags": [
+      "UK",
+      "WWII"
+    ]
+  },
+  {
+    "question": "The 'New Deal' was a series of programs introduced by which U.S. president?",
+    "answers": [
+      "Franklin D. Roosevelt",
+      "Herbert Hoover",
+      "Harry S. Truman",
+      "Woodrow Wilson"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "1900s",
+    "tags": [
+      "USA",
+      "economy"
+    ]
+  },
+  {
+    "question": "What was the code name for the Allied invasion of Normandy in 1944?",
+    "answers": [
+      "Operation Overlord",
+      "Operation Torch",
+      "Operation Barbarossa",
+      "Operation Market Garden"
+    ],
+    "correctIndex": 0,
+    "difficulty": "medium",
+    "era": "1900s",
+    "tags": [
+      "WWII",
+      "D-Day"
+    ]
+  },
+  {
+    "question": "Which city was divided by a wall from 1961 to 1989?",
+    "answers": [
+      "Berlin",
+      "Vienna",
+      "Prague",
+      "Budapest"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "1900s",
+    "tags": [
+      "Cold War",
+      "Germany"
+    ]
+  },
+  {
+    "question": "Who led the Civil Rights Movement and delivered the 'I Have a Dream' speech?",
+    "answers": [
+      "Martin Luther King Jr.",
+      "Malcolm X",
+      "Rosa Parks",
+      "Frederick Douglass"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "1900s",
+    "tags": [
+      "USA",
+      "civil rights"
+    ]
+  },
+  {
+    "question": "Which revolution in 1949 established the People’s Republic of China?",
+    "answers": [
+      "Chinese Communist Revolution",
+      "Xinhai Revolution",
+      "Cultural Revolution",
+      "May Fourth Movement"
+    ],
+    "correctIndex": 0,
+    "difficulty": "medium",
+    "era": "1900s",
+    "tags": [
+      "China",
+      "revolution"
+    ]
+  },
+  {
+    "question": "Which two cities were targeted with atomic bombs in 1945?",
+    "answers": [
+      "Hiroshima and Nagasaki",
+      "Tokyo and Osaka",
+      "Kyoto and Hiroshima",
+      "Nagasaki and Yokohama"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "1900s",
+    "tags": [
+      "WWII",
+      "Japan"
+    ]
+  },
+  {
+    "question": "The Cuban Missile Crisis in 1962 was a standoff between the U.S. and which nation?",
+    "answers": [
+      "Soviet Union",
+      "China",
+      "Cuba",
+      "East Germany"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "1900s",
+    "tags": [
+      "Cold War",
+      "USA",
+      "USSR"
+    ]
+  },
+  {
+    "question": "Which movement ended apartheid and led to majority rule in South Africa in 1994?",
+    "answers": [
+      "Anti-apartheid movement",
+      "Pan-Africanism",
+      "Mau Mau Uprising",
+      "Truth and Reconciliation"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "1900s",
+    "tags": [
+      "Africa",
+      "South Africa"
+    ]
+  },
+  {
+    "question": "Which treaty formally ended World War I in 1919?",
+    "answers": [
+      "Treaty of Versailles",
+      "Treaty of Paris",
+      "Treaty of Vienna",
+      "Treaty of London"
+    ],
+    "correctIndex": 0,
+    "difficulty": "medium",
+    "era": "1900s",
+    "tags": [
+      "WWI",
+      "treaties"
+    ]
+  },
+  {
+    "question": "'The Iron Curtain' was a term popularized by which leader?",
+    "answers": [
+      "Winston Churchill",
+      "Joseph Stalin",
+      "Harry Truman",
+      "Charles de Gaulle"
+    ],
+    "correctIndex": 0,
+    "difficulty": "medium",
+    "era": "1900s",
+    "tags": [
+      "Cold War",
+      "Europe"
+    ]
+  },
+  {
+    "question": "Which European economic and political union began with the Treaty of Maastricht in 1993?",
+    "answers": [
+      "European Union",
+      "European Free Trade Association",
+      "Council of Europe",
+      "NATO"
+    ],
+    "correctIndex": 0,
+    "difficulty": "medium",
+    "era": "1900s",
+    "tags": [
+      "Europe",
+      "integration"
+    ]
+  },
+  {
+    "question": "Which event on September 11, 2001, had global repercussions?",
+    "answers": [
+      "Terrorist attacks in the United States",
+      "Iraq War begins",
+      "Global financial crisis",
+      "Hurricane Katrina"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "2000s–Present",
+    "tags": [
+      "USA",
+      "terrorism"
+    ]
+  },
+  {
+    "question": "Which social media platform launched in 2004 at Harvard?",
+    "answers": [
+      "Facebook",
+      "Twitter",
+      "YouTube",
+      "Instagram"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "2000s–Present",
+    "tags": [
+      "technology",
+      "internet"
+    ]
+  },
+  {
+    "question": "Which global financial crisis peaked in 2008?",
+    "answers": [
+      "Great Recession",
+      "Asian Financial Crisis",
+      "Eurozone crisis",
+      "Dot-com bust"
+    ],
+    "correctIndex": 0,
+    "difficulty": "easy",
+    "era": "2000s–Present",
+    "tags": [
+      "economy",
+      "finance"
+    ]
+  }
+]
